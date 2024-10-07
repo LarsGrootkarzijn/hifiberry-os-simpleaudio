@@ -13,7 +13,7 @@ MPD_MPRIS_SITE = https://github.com/natsukagami/mpd-mpris/archive
 
 
 
-MPD_MPRIS_BUILD_TARGETS=./cmd/mpd-mpris/main.go
+MPD_MPRIS_BUILD_TARGETS=/cmd/mpd-mpris/main.go
 MPD_MPRIS_BIN_NAME=mpd-mpris
 
 define MPD_MPRIS_INSTALL_INIT_SYSTEMD
