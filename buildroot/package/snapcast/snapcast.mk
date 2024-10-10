@@ -10,6 +10,8 @@ SNAPCAST_DEPENDENCIES = libogg alsa-lib avahi boost flac libvorbis
 SNAPCAST_LICENSE = GPL-3.0+
 SNAPCAST_LICENSE_FILES = LICENSE
 
+#SNAPCAST_PATCH = $(BR2_PACKAGE_SNAPCAST_DIR)/0002-std-string.patch
+
 define SNAPCLIENT_INSTALL_CONFIG
 	mkdir -p $(TARGET_DIR)/etc/default
 	$(INSTALL) -m 0755 -D $(@D)/debian/snapclient.default $(TARGET_DIR)/etc/default/snapclient
