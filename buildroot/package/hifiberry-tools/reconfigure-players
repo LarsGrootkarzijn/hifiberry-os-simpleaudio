@@ -97,6 +97,12 @@ usb_devices() {
 pi_model() {
  modelname=$(tr -d '\0' < /proc/device-tree/model)
 
+ if [[ $modelname == *"Simpleaudio Roomplayer+"* ]]; then
+  PIMODEL="unknown"
+  FEATURES="$FEATURES arm7"
+  return
+ fi
+
  if [[ $modelname == *"3 Model B+"* ]]; then
   PIMODEL="3B+"
   PIVERSION=3
