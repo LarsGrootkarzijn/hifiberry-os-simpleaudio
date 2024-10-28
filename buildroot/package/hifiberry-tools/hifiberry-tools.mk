@@ -45,8 +45,6 @@ define HIFIBERRY_TOOLS_INSTALL_TARGET_CMDS
 	   $(TARGET_DIR)/opt/hifiberry/bin/speaker-role
     $(INSTALL) -D -m 0600 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/hifiberry.conf.sample \
            $(TARGET_DIR)/etc/hifiberry.conf.sample
-    #$(INSTALL) -D -m 0755 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/resize-partitions \
-    #            $(TARGET_DIR)/opt/hifiberry/bin
     $(INSTALL) -D -m 0755 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/activate-data-partition \
                 $(TARGET_DIR)/opt/hifiberry/bin
     $(INSTALL) -D -m 0755 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/check-system \
@@ -71,7 +69,6 @@ define HIFIBERRY_TOOLS_INSTALL_TARGET_CMDS
 		$(TARGET_DIR)/opt/hifiberry/bin
     $(INSTALL) -D -m 0755 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/snd_soc_core_disable_pm.conf \
 		$(TARGET_DIR)/etc/modprobe.d/snd_soc_core_disable_pm.conf
-    #touch $(TARGET_DIR)/resize-me
     touch $(TARGET_DIR)/etc/spotifyd.conf
 
     # disable sshd by default
@@ -105,8 +102,6 @@ define HIFIBERRY_TOOLS_INSTALL_INIT_SYSTEMD
                 $(TARGET_DIR)/lib/systemd/system/configure-players.service
         $(INSTALL) -D -m 0644 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/myip.service \
                 $(TARGET_DIR)/lib/systemd/system/myip.service
-        #$(INSTALL) -D -m 0644 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/resize-partitions.service \
-        #        $(TARGET_DIR)/usr/lib/systemd/system/resize-partitions.service
         $(INSTALL) -D -m 0644 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/reboot.service \
                 $(TARGET_DIR)/usr/lib/systemd/system/reboot.service
         $(INSTALL) -D -m 0644 $(BR2_EXTERNAL_HIFIBERRY_PATH)/package/hifiberry-tools/activate-data-partition.service \
