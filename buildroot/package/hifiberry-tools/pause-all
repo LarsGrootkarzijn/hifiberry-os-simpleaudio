@@ -3,7 +3,7 @@
 # Pause all players and make sure they are not using the sound card anymore
 #
 
-CARD=`aplay -l | grep -i hifiberry | awk '{print $2}' | sed s/://`
+CARD=`aplay -l | grep -i roomplayer | awk '{print $2}' | sed s/://`
 DATE1=`date +%Y%m%d-%H%M%S`
 PLAYER=$1
 CALLINGPID=$PPID
