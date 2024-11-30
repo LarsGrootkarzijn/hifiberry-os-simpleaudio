@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Title: Script to get GPIO direction and value
+#
+# Inputs:	$1	GPIO number
+#
+# Usage:	getgpio <gpio number>
+#
+# Note:		This script only reads the gpio value. It does not change
+#			the gpio direction
+# 
+
+echo $1 > /sys/class/gpio/export
+exec < /sys/class/gpio/gpio$1/value
+read val
+exec < /sys/class/gpio/gpio$1/direction
+read dir
+echo $1 > /sys/class/gpio/unexport
+echo GPIO $1 direction = $dir, value = $val

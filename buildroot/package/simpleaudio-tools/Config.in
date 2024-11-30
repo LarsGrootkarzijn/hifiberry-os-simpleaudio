@@ -1,4 +1,0 @@
-config BR2_PACKAGE_SIMPLEAUDIO_TOOLS
-    bool "simpleaudio-tools"
-    help
-      Installs Simpleaudio tools to the Roomplayer.

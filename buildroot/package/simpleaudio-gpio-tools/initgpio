@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+#Config done as followed:
+#/usr/bin/setgpio GPIONUMBER INPUT(0)/OUTPUT(1) FALSE(0)/TRUE(1)
+#
+#
+################################Soundcard init############################
+#Enable soundcard
+/usr/bin/setgpio 493 1 1
+
+#These are used by the kernel and should not be set from userspace.
+#/usr/bin/setgpio 492 1 0
+#/usr/bin/setgpio 491 1 0
+
+################################LEDs######################################
+
+#Set white LED brightness
+/usr/bin/setgpio 490 1 0
+
+#Disable red LED
+/usr/bin/setgpio 498 1 0
+
+#Enable green LED
+#First disable blinkgpio green LED
+/usr/bin/setgpio 499 1 0
+/usr/bin/setgpio 500 1 1
+
+#Green led blinking
+#/usr/bin/setgpio 499 1 1
+#Not enabled, just here for completeness.
+
+################################################################
+
+########################Configure Sound I/O#####################
+#enable line-out
+/usr/bin/setgpio 495 1 0
+
+#Enable headphone out
+/usr/bin/setgpio 496 1 0
+
+#Enable amplifier
+/usr/bin/setgpio 497 1 0
+
+###############################################################
+
+######################Inputs##################################
+
+#The following GPIOs are used as inputs.
+
+#Amp enabled
+/usr/bin/setgpio 504 0 0
+#Headphone plugged in
+/usr/bin/setgpio 506 0 0
+#Line front plugged in
+/usr/bin/setgpio 507 0 0
+#Side button
+/usr/bin/setgpio 488 0 0
+
+
+####################Misc#####################################
+
+#Enable/disable ethernet PHY (this will cause ethernet disconnection!)
+#/usr/bin/setgpio 501 0 0
+
+#Set EoP
+#/usr/bin/eop_flash_ps
+
+#############################################################

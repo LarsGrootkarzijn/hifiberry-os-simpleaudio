@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Title: Script to set a GPIO
+#
+# Inputs:	$1	GPIO number
+#			$2	Direction:	0 = input, 1 = output
+#			$3	Value: 		0 = low, 1 = high
+#
+# Usage:	setgpio <gpio number> <direction> <value>
+# 
+
+echo $1 > /sys/class/gpio/export
+if [ $2 -eq 0 ]
+then
+	echo in > /sys/class/gpio/gpio$1/direction
+else
+	echo out > /sys/class/gpio/gpio$1/direction
+	echo $3 > /sys/class/gpio/gpio$1/value
+fi
+echo $1 > /sys/class/gpio/unexport

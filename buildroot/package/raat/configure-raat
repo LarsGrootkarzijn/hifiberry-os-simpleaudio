@@ -4,7 +4,7 @@ if [ ! -f "/etc/uuid" ]; then
 fi
 
 UUID=`cat /etc/uuid`
-CARD=`aplay -l | grep Hi[fF]iBerry`
+CARD=`aplay -l | grep roomplayer`
 DIGI=`echo $CARD | grep -i digi`
 if [ "$DIGI" != "" ]; then
  CARD="Digi+"
@@ -63,7 +63,7 @@ PLAYBACKDEVICE="default"
 cat <<END >/etc/hifiberry_raat.conf
 {
     "vendor":      "HiFiBerry",
-    "model":       "$CARD",
+    "model":       "Roomplayer+",
     "unique_id":   "$UUID",
     "output":      { "type": "alsa", 
                      "device": "$PLAYBACKDEVICE",
@@ -77,9 +77,6 @@ cat <<END >/etc/hifiberry_raat.conf
                          {"sample_type": "pcm", "sample_rate": 88200, "bits_per_sample": 16, "channels": 2},
                          {"sample_type": "pcm", "sample_rate": 88200, "bits_per_sample": 24, "channels": 2},
                          {"sample_type": "pcm", "sample_rate": 88200, "bits_per_sample": 32, "channels": 2},
-                         {"sample_type": "pcm", "sample_rate": 176400, "bits_per_sample": 16, "channels": 2},
-                         {"sample_type": "pcm", "sample_rate": 176400, "bits_per_sample": 24, "channels": 2},
-                         {"sample_type": "pcm", "sample_rate": 176400, "bits_per_sample": 32, "channels": 2},
                          {"sample_type": "pcm", "sample_rate": 48000, "bits_per_sample": 16, "channels": 2},
                          {"sample_type": "pcm", "sample_rate": 48000, "bits_per_sample": 24, "channels": 2},
                          {"sample_type": "pcm", "sample_rate": 48000, "bits_per_sample": 32, "channels": 2},

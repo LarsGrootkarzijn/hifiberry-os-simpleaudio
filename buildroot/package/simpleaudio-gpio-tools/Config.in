@@ -1,0 +1,4 @@
+config BR2_PACKAGE_SIMPLEAUDIO_GPIO_TOOLS
+    bool "simpleaudio-gpio-tools"
+    help
+      Installs Simpleaudio GPIO tools to the rootfs.

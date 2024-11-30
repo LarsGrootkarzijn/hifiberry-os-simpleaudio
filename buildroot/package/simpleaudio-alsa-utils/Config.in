@@ -1,4 +1,0 @@
-config BR2_PACKAGE_SIMPLEAUDIO_ALSA_UTILS
-    bool "simpleaudio-alsa-utils"
-    help
-      Enable Simpleaudio ALSA-UTILS package.
