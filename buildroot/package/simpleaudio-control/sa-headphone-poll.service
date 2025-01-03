@@ -1,0 +1,10 @@
+[Unit]
+Description=Headphone gpio watcher
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/sa-headphone-poll
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

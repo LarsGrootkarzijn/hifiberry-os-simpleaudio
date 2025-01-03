@@ -1,0 +1,24 @@
+<div class="menu-screen" id="sa-update" data-icon="update.svg" data-menu-title="Simpleaudio Software Update" data-context="general-settings/essentials">
+    <header>
+        <div class="back-button master"></div>
+        <h1>Simpleaudio Software Update</h1>
+    </header>
+
+    <div class="scroll-area">
+        <div class="menu-content">
+            <p id="no-update">No update available.</p>
+	    <div class="button pill grey" id="check-update-button" onclick="sa_update.checkUpdate()">recheck for update</div>
+
+            <p id="update-available"><b>A new update is available.</b></p>
+            <p id="update-version">Version 0.0.0</p>
+   	    <div class="button pill grey" id="update-button" onclick="sa_update.runUpdate();">Update now</div>
+           
+            
+	    <p id="update-text"><b>Updating Roomplayer. Device will reboot once finished. You can use the device in the meantime.</b></p>
+	    <p id="changing-update-text">Placeholder</p>  	
+	
+	    </div>
+    </div>
+</div>
+
+<script type="text/javascript" charset="utf-8" src="€/sa-update-client.js"></script>

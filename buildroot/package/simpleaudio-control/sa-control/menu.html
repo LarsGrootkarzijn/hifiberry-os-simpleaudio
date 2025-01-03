@@ -1,0 +1,38 @@
+<div class="menu-screen" data-context="general-settings/essentials" id="sa-control" data-icon="gear.svg" data-menu-title="Simpleaudio Control Panel">
+	
+	<header>
+		<div class="back-button master"></div>
+		<h1>Simpleaudio Control Panel</h1>
+	</header>
+	
+	<div class="scroll-area">
+		<div class="menu-content">
+			<div class="menu-item toggle" id="amplifier-enabled-toggle" onclick="sa_control.toggleService('Amplifier');">
+				<div class="menu-label">Amplifier</div>
+				<div class="menu-toggle"></div>
+			</div>
+			<p id="amplifier-text">Amplifier enable/disable to save power, or just simply turn it off.</p>		
+
+			<div class="menu-item toggle" id="rear-out-enabled-toggle" onclick="sa_control.toggleService('Rear Line-Out');">
+                                <div class="menu-label">Rear Line-Out</div>
+                                <div class="menu-toggle"></div>
+                        </div>
+			<p id="rear-out-text">Rear Line-Out automatically gets disabled if a headphone is attached via the front input.</p>
+						
+			<div class="menu-item toggle" id="rear-in-enabled-toggle" onclick="sa_control.toggleService('Rear Line-In');">
+                                <div class="menu-label">Rear Line-In</div>
+                                <div class="menu-toggle"></div>
+                        </div>
+			<p id="rear-in-text">When Rear Line-In is enabled Front Line-in automatically gets disabled.</p>
+
+			<div class="menu-item toggle" id="front-in-enabled-toggle" onclick="sa_control.toggleService('Front Line-In');">
+                                <div class="menu-label">Front Line-In</div>
+                                <div class="menu-toggle"></div>
+                        </div>
+			<p id="front-in-text">When Front Line-In is enabled Rear Line-in automatically gets disabled.</p>
+		</div>
+		
+	</div>
+</div>
+
+<script type="text/javascript" charset="utf-8" src="€/sa-control-client.js"></script>

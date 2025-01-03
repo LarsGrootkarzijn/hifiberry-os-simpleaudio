@@ -1,0 +1,4 @@
+config BR2_PACKAGE_SIMPLEAUDIO_UPDATER
+    bool "simpleaudio-updater"
+    help
+      Installs Simpleaudio updater to the Beocreate UI.

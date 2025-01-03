@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "506" > /sys/class/gpio/export 2>/dev/null
+echo "496" > /sys/class/gpio/export 2>/dev/null
+
+echo "in" > /sys/class/gpio/gpio506/direction
+echo "out" > /sys/class/gpio/gpio496/direction
+
+while true; do
+    # Read the state of GPIO 506
+    value=$(cat /sys/class/gpio/gpio506/value)
+
+    if [ "$value" -eq 1 ]; then
+        echo "0" > /sys/class/gpio/gpio496/value
+    else
+        echo "1" > /sys/class/gpio/gpio496/value
+	echo "495" > /sys/class/gpio/export 2>/dev/null
+        echo "0" > /sys/class/gpio/gpio495/value
+	echo "495" > /sys/class/gpio/unexport 2>/dev/null
+    fi
+
+    sleep 0.1
+done
+

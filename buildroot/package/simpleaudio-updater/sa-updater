@@ -1,0 +1,198 @@
+#!/bin/bash
+
+REPO_URL="https://github.com/LarsGrootkarzijn/buildroot-simpleaudio"
+FILE_NAME="rootfs.tar.gz"
+MOUNT_POINT="/mnt"
+DOWNLOAD=/data
+
+SLEEP_TIME=1
+
+echo "Fetching the latest tag from the repository: $REPO_URL"
+LATEST_TAG=$(curl -s "https://api.github.com/repos/LarsGrootkarzijn/buildroot-simpleaudio/tags" | jq -r '.[0].name')
+
+sleep $SLEEP_TIME
+
+if [ -z "$LATEST_TAG" ]; then
+  echo "Failed to fetch the latest tag, aborting."
+  exit 1
+fi
+
+echo "Latest version: $LATEST_TAG"
+echo ""
+
+sleep $SLEEP_TIME
+
+# Step 2: Download the rootfs.tar.gz file from the repository
+echo "Downloading update"
+RAW_FILE_URL="https://github.com/LarsGrootkarzijn/buildroot-simpleaudio/releases/download/$LATEST_TAG/$FILE_NAME"
+OUTPUT_FILE="$DOWNLOAD/$FILE_NAME"
+
+curl -s -L -o "$OUTPUT_FILE" "$RAW_FILE_URL"
+
+sleep $SLEEP_TIME
+
+if [ $? -ne 0 ]; then
+  echo "Failed to download update, aborting."
+  exit 1
+fi
+
+echo "Successfully downloaded update."
+
+sleep $SLEEP_TIME
+
+
+# Step 3: Determine the current rootfs mount partition
+echo "Determining current partition."
+CURRENT_PARTITION=$(findmnt -n -o SOURCE /)
+
+sleep $SLEEP_TIME
+
+if [ -z "$CURRENT_PARTITION" ]; then
+  echo "Error: Unable to determine the root filesystem partition."
+  exit 1
+fi
+
+echo "The current root is mounted on: $CURRENT_PARTITION"
+echo ""
+
+sleep $SLEEP_TIME
+
+
+# Step 4: Dynamically calculate partition names
+echo "Checking and mounting unused root partition"
+
+# Remove last character from CURRENT_PARTITION (e.g., mmcblk0p2 -> mmcblk0)
+PARTITION_BASE="${CURRENT_PARTITION%?}"
+PARTITION=$(echo $CURRENT_PARTITION | cut -d'p' -f2)
+PARTITION1="${PARTITION_BASE}2"  # This should be the second partition (e.g., mmcblk0p2)
+PARTITION2="${PARTITION_BASE}3"  # This should be the third partition (e.g., mmcblk0p3)
+
+
+sleep $SLEEP_TIME
+
+if [ "$PARTITION" -eq 2 ]; then
+    MOUNTED_PARTITION="$PARTITION2"
+    mount $MOUNTED_PARTITION $MOUNT_POINT
+elif [ "$PARTITION" -eq 3 ]; then
+    MOUNTED_PARTITION="$PARTITION1"
+    mount $MOUNTED_PARTITION $MOUNT_POINT
+else
+    echo "Error: Partition is not 2 or 3."
+    exit 1;
+fi
+
+rm -r $MOUNT_POINT/*
+
+sleep $SLEEP_TIME
+
+# Step 5: Extract the rootfs.tar.gz to the mounted partition
+echo "Extracting update to unused root partition $MOUNT_POINT, this may take a while."
+gunzip -c "$OUTPUT_FILE" | tar -xf - -C "$MOUNT_POINT"
+
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to extract $FILE_NAME."
+  exit 1
+fi
+
+echo "Successfully extracted update to unused root partition $MOUNT_POINT"
+
+sleep $SLEEP_TIME
+
+# Step 6: Update /boot/rfspart to point to the mounted partition (non-root partition)
+echo "Updating boot arguments."
+BOOT_PARTITION="$MOUNTED_PARTITION"
+
+sleep $SLEEP_TIME
+
+# Ensure the partition is in the correct format (e.g., mmcblk0p2 -> 2)
+PARTITION_NUMBER="${BOOT_PARTITION##*p}"  # Extract the partition number
+
+# Update the /boot/rfspart file
+echo "rfspart=$PARTITION_NUMBER" > /boot/rfspart
+
+sleep $SLEEP_TIME
+
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to update /boot/rfspart."
+  exit 1
+fi
+
+echo "Successfully updated boot arguments."
+
+sleep $SLEEP_TIME
+
+echo "migrating SSH host keys..."
+cp /etc/ssh/ssh_host* $MOUNT_POINT/etc/ssh
+
+echo "migrating other configurations..."
+for i in `cat $MOUNT_POINT/opt/hifiberry/etc/config-files`; do
+  	if [ -f $i ]; then
+    		DIR=`dirname $i`
+    		cd $DIR
+    		if [ ! -d $MOUNT_POINT/$DIR ]; then
+			mkdir -p $MOUNT_POINT/$DIR
+    		fi
+    		echo $i
+    		cp $i $MOUNT_POINT/$DIR
+  	fi
+  	if [ -d $i ]; then
+    		DIR=`dirname $i`
+    		cd $DIR
+    		if [ ! -d $MOUNT_POINT/$DIR ]; then
+      			mkdir -p $MOUNT_POINT/$DIR
+    		fi
+    		echo "$i"
+    		cp -r $i $MOUNT_POINT/$DIR
+  	fi
+done
+
+echo "checking systemctl services..."
+for i in `cat /opt/hifiberry/etc/services`; do
+ 	systemctl is-active --quiet $i
+ 	if [ "$?" == "0" ]; then
+   	echo "$i: enabled"
+   		if [ ! -f "$MOUNT_POINT/etc/systemd/system/multi-user.target.wants/$i" ]; then
+     			echo "enabling..."
+     			ln -s ../../../../usr/lib/systemd/system/$i $MOUNT_POINT/etc/systemd/system/multi-user.target.wants/$i
+   		fi
+ 	else
+   		echo "$i: disabled"
+   		if [ -f "$MOUNT_POINT/etc/systemd/system/multi-user.target.wants/$i" ]; then
+     			echo "disabling..."
+     			rm $MOUNT_POINT/etc/systemd/system/multi-user.target.wants/$i
+   		fi
+	fi
+done
+
+touch $MOUNT_POINT/etc/sa.version
+echo $LATEST_TAG > $MOUNT_POINT/etc/sa.version
+
+echo "storing version number of previous release..."
+cp /etc/sa.version $MOUNT_POINT/etc/sa.version.previous
+
+# Step 7: Sync the data, unmount the non-root partition, and reboot the system
+echo "Syncing data before reboot."
+sync
+
+sleep $SLEEP_TIME
+
+# Unmount the mounted non-root partition
+echo "Unmounting new root $MOUNTED_PARTITION..."
+umount "$MOUNTED_PARTITION"
+
+sleep $SLEEP_TIME
+
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to unmount $MOUNTED_PARTITION."
+  exit 1
+fi
+
+echo "Successfully unmounted new root $MOUNTED_PARTITION."
+
+sleep $SLEEP_TIME
+
+rm $OUTPUT_FILE
+
+# Reboot the system
+echo "Rebooting the system."
+reboot
