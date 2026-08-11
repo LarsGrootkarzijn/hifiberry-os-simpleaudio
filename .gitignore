@@ -90,3 +90,4 @@ packages/vu-meter/src
 
 # Python bytecode from the helper scripts
 __pycache__/
+.env
