@@ -8,9 +8,6 @@ override_dh_auto_configure:
 	@echo "Using pre-cloned RAAT source from raat/"
 
 override_dh_auto_build:
-	# Build RAAT using compile64 script
-	chmod +x raat/compile64
-	cd raat && ./compile64
 
 override_dh_auto_install:
 	# Install RAAT components
@@ -38,7 +35,7 @@ override_dh_auto_install:
 	cp players.d/raat.json debian/hifiberry-raat/etc/audiocontrol/players.d/
 	
 	# Install RAAT binaries (excluding .a files)
-	find raat/bin/release/linux/aarch64/ -type f ! -name '*.a' -exec cp {} debian/hifiberry-raat/usr/bin/ \;
+	find raat/bin/release/linux/armhf/ -type f ! -name '*.a' -exec cp {} debian/hifiberry-raat/usr/bin/ \;
 	
 	# Make all binaries executable
 	chmod +x debian/hifiberry-raat/usr/bin/*
@@ -54,4 +51,3 @@ override_dh_auto_test:
 
 override_dh_strip:
 	# Skip debug symbol extraction - don't create dbgsym package
-	dh_strip --no-automatic-dbgsym
