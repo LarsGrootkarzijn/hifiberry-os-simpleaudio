@@ -23,8 +23,8 @@ export GPG_TTY=$(tty)
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 PROJECT_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 
-if [ -f "$PROJECT_ROOT/.env" ]; then
-    . "$PROJECT_ROOT/.env"
+if [ -f "/home/lars/Desktop/.env" ]; then
+    . "/home/lars/Desktop/.env"
 else
     echo "ERROR: .env not found:"
     echo "       $PROJECT_ROOT/.env"
